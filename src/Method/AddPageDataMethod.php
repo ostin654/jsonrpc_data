@@ -8,10 +8,7 @@ use App\Entity\PageData;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Optional;
-use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Required;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Yoanm\JsonRpcParamsSymfonyValidator\Domain\MethodWithValidatedParamsInterface;
@@ -32,10 +29,8 @@ class AddPageDataMethod implements JsonRpcMethodInterface, MethodWithValidatedPa
         $pageData
             ->setName($paramList['name'])
             ->setNotes($paramList['notes'])
-            ->setNumber($paramList['number'])
             ->setPageUid($paramList['page_uid'])
-            ->setCreatedAt(new \DateTime('now'))
-            ->setUpdatedAt(new \DateTime('now'));
+            ->setCreatedAt(new \DateTime('now'));
 
         $this->entityManager->persist($pageData);
         $this->entityManager->flush();
@@ -48,11 +43,10 @@ class AddPageDataMethod implements JsonRpcMethodInterface, MethodWithValidatedPa
         return new Collection([
             'fields' => [
                 'name' => new Required([
-                    new Length(['min' => 3])
+                    new NotBlank(),
                 ]),
-                'notes' => new Optional(),
-                'number' => new Optional([
-                    new Positive()
+                'notes' => new Required([
+                    new NotBlank(),
                 ]),
                 'page_uid' => new Required([
                     new NotBlank(),

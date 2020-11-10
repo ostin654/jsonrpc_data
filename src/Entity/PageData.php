@@ -28,11 +28,6 @@ class PageData implements \JsonSerializable
     private string $notes;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private int $number;
-
-    /**
      * @ORM\Column(type="string", length=36)
      */
     private string $pageUid;
@@ -41,11 +36,6 @@ class PageData implements \JsonSerializable
      * @ORM\Column(type="datetime")
      */
     private \DateTimeInterface $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private \DateTimeInterface $updatedAt;
 
     public function getId(): ?int
     {
@@ -76,18 +66,6 @@ class PageData implements \JsonSerializable
         return $this;
     }
 
-    public function getNumber(): ?int
-    {
-        return $this->number;
-    }
-
-    public function setNumber(int $number): self
-    {
-        $this->number = $number;
-
-        return $this;
-    }
-
     public function getPageUid(): ?string
     {
         return $this->pageUid;
@@ -112,27 +90,13 @@ class PageData implements \JsonSerializable
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function jsonSerialize(): array
     {
         return [
             'name' => $this->name,
             'notes' => $this->notes,
-            'number' => $this->number,
             'page_uid' => $this->pageUid,
             'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updatedAt->format('Y-m-d H:i:s'),
         ];
     }
 }

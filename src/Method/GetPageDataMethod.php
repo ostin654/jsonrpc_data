@@ -4,7 +4,6 @@ namespace App\Method;
 
 use App\Entity\PageData;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -28,10 +27,10 @@ class GetPageDataMethod implements JsonRpcMethodInterface, MethodWithValidatedPa
     public function apply(array $paramList = null)
     {
         $pageData = $this->entityManager->getRepository(PageData::class)
-            ->findOneBy(['pageUid' => $paramList['page_uid']]);
+            ->findBy(['pageUid' => $paramList['page_uid']], ['createdAt' => 'desc']);
 
         if ($pageData === null) {
-            throw new EntityNotFoundException('Page not found');
+            return [];
         }
 
         return $this->normalizer->normalize($pageData);
