@@ -4,7 +4,8 @@ namespace App\Method;
 
 use App\Entity\PageData;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -16,12 +17,12 @@ use Yoanm\JsonRpcServer\Domain\JsonRpcMethodInterface;
 class GetPageDataMethod implements JsonRpcMethodInterface, MethodWithValidatedParamsInterface
 {
     private EntityManagerInterface $entityManager;
-    private NormalizerInterface $normalizer;
+    private SerializerInterface $serializer;
 
-    public function __construct(EntityManagerInterface $entityManager, NormalizerInterface $normalizer)
+    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
-        $this->normalizer = $normalizer;
+        $this->serializer = $serializer;
     }
 
     public function apply(array $paramList = null)
@@ -33,7 +34,9 @@ class GetPageDataMethod implements JsonRpcMethodInterface, MethodWithValidatedPa
             return [];
         }
 
-        return $this->normalizer->normalize($pageData);
+        return $this->serializer->normalize($pageData, null, [
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['id'],
+        ]);
     }
 
     public function getParamsConstraint(): Constraint

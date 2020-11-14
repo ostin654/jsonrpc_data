@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\PageDataRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass=PageDataRepository::class)
  */
-class PageData implements \JsonSerializable
+class PageData
 {
     /**
      * @ORM\Id
@@ -19,21 +20,25 @@ class PageData implements \JsonSerializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @SerializedName("name")
      */
     private string $name;
 
     /**
      * @ORM\Column(type="text")
+     * @SerializedName("notes")
      */
     private string $notes;
 
     /**
      * @ORM\Column(type="string", length=36)
+     * @SerializedName("page_uid")
      */
     private string $pageUid;
 
     /**
      * @ORM\Column(type="datetime")
+     * @SerializedName("created_at")
      */
     private \DateTimeInterface $createdAt;
 
@@ -88,15 +93,5 @@ class PageData implements \JsonSerializable
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'name' => $this->name,
-            'notes' => $this->notes,
-            'page_uid' => $this->pageUid,
-            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
-        ];
     }
 }
